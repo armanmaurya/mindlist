@@ -48,12 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _toggleTodo(int index) async {
     setState(() {
       final toggled = _todos[index].copyWith(isDone: !_todos[index].isDone);
+
+      // Remove the item from its current position
       _todos.removeAt(index);
 
       if (toggled.isDone) {
-        _todos.add(toggled); // move to end
+        // If the item is marked as done, move it to the end
+        _todos.add(toggled);
       } else {
-        _todos.insert(0, toggled); // move to top if unchecked
+        // If the item is unchecked and already at the top, don't reorder
+        if (index == 0) {
+          _todos.insert(0, toggled);
+        } else {
+          _todos.insert(index, toggled);
+        }
       }
     });
 
