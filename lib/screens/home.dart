@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:todo_native/widgets/add_todo.dart';
 import 'package:todo_native/widgets/todo_item.dart';
