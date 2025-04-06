@@ -19,6 +19,10 @@ class AddTodoDialog extends StatelessWidget {
         ),
       ),
       actions: [
+         TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
         TextButton(
           onPressed: () {
             final text = controller.text.trim();
@@ -29,10 +33,7 @@ class AddTodoDialog extends StatelessWidget {
           },
           child: Text("Add"),
         ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
+       
       ],
     );
   }
