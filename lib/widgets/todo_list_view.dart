@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:todo_native/controllers/todo_controller.dart';
@@ -14,13 +15,10 @@ import 'package:todo_native/widgets/todo_item.dart';
 //   State<TodoListView> createState() => _TodoListViewState();
 // }
 
-class TodoListView extends StatelessWidget{
+class TodoListView extends StatelessWidget {
   final TodoController controller;
 
-  const TodoListView({
-    super.key,
-    required this.controller
-  });
+  const TodoListView({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +36,9 @@ class TodoListView extends StatelessWidget{
 
   Widget _buildListView(List<Todo> todos) {
     return ImplicitlyAnimatedReorderableList<Todo>(
-      onReorderStarted:(item, index) {
-        // Print dragging
-        print("Dragging $item at index $index");
+      onReorderStarted: (item, index) {
+        HapticFeedback.heavyImpact();
       },
-      physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
       items: todos,
       areItemsTheSame: (oldItem, newItem) => oldItem.title == newItem.title,
@@ -61,7 +57,7 @@ class TodoListView extends StatelessWidget{
               t,
             );
             return SizeFadeTransition(
-              sizeFraction: 0.7,
+              sizeFraction: 0.6,
               curve: Curves.easeInOut,
               animation: itemAnimation,
               child: AnimatedScale(
