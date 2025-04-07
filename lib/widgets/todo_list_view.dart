@@ -38,6 +38,12 @@ class TodoListView extends StatelessWidget{
 
   Widget _buildListView(List<Todo> todos) {
     return ImplicitlyAnimatedReorderableList<Todo>(
+      onReorderStarted:(item, index) {
+        // Print dragging
+        print("Dragging $item at index $index");
+      },
+      physics: const BouncingScrollPhysics(),
+      shrinkWrap: true,
       items: todos,
       areItemsTheSame: (oldItem, newItem) => oldItem.title == newItem.title,
       onReorderFinished: (item, from, to, newItems) {
@@ -55,7 +61,7 @@ class TodoListView extends StatelessWidget{
               t,
             );
             return SizeFadeTransition(
-              sizeFraction: 1,
+              sizeFraction: 0.7,
               curve: Curves.easeInOut,
               animation: itemAnimation,
               child: AnimatedScale(

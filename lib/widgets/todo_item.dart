@@ -24,37 +24,36 @@ class _TodoItemState extends State<TodoItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: widget.todo.isDone ? Colors.grey[200] : Colors.grey[300],
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Material(
         borderRadius: BorderRadius.circular(8),
-      ),
-      child: Handle(
-        delay: const Duration(milliseconds: 200),
-        vibrate: false,
+        clipBehavior: Clip.antiAlias, // 👈 this ensures the ripple is clipped!
+        color: widget.todo.isDone ? Colors.grey[200] : Colors.grey[300],
         child: ListTile(
           leading: Checkbox(
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             value: widget.todo.isDone,
-            onChanged: (bool? value) {
-              widget.onToggle(value);
-            },
+            onChanged: widget.onToggle,
           ),
           title: Text(widget.todo.title),
+          trailing: Handle(
+            delay: const Duration(milliseconds: 150),
+            vibrate: false,
+            child: const Icon(Icons.drag_handle),
+          ),
           onTap: () async {
             await showDialog(
               context: context,
-              builder:
-                  (context) => UpdateTodoDialog(
-                    onDelete: widget.onDelete,
-                    onUpdate: widget.onUpdate,
-                    initialValue: widget.todo.title,
-                  ),
+              builder: (context) => UpdateTodoDialog(
+                onDelete: widget.onDelete,
+                onUpdate: widget.onUpdate,
+                initialValue: widget.todo.title,
+              ),
             );
           },
-          onLongPress: () {},
         ),
       ),
     );
   }
 }
+
