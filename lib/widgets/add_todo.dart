@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_native/controllers/todo_controller.dart';
 
 class AddTodoDialog extends StatelessWidget {
   final Function(String title) onAdd;
@@ -14,26 +15,33 @@ class AddTodoDialog extends StatelessWidget {
         controller: controller,
         autocorrect: true,
         autofocus: true,
-        decoration: const InputDecoration(
-          hintText: "Enter todo Title"
-        ),
+        decoration: const InputDecoration(hintText: "Enter todo Title"),
       ),
       actions: [
-         TextButton(
+        TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             final text = controller.text.trim();
             if (text.isNotEmpty) {
-              onAdd(text);
-              Navigator.of(context).pop();
+              try {
+                await onAdd(text);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              } on DuplicateTodoTitleException {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Duplicate Todo Title")),
+                  );
+                }
+              }
             }
           },
           child: Text("Add"),
         ),
-       
       ],
     );
   }

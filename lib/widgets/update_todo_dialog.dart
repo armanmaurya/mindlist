@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_native/controllers/todo_controller.dart';
 
 class UpdateTodoDialog extends StatefulWidget {
   final Function(String title) onUpdate;
@@ -8,7 +9,7 @@ class UpdateTodoDialog extends StatefulWidget {
     super.key,
     required this.onUpdate,
     required this.initialValue,
-    required this.onDelete
+    required this.onDelete,
   });
 
   @override
@@ -26,23 +27,7 @@ class _UpdateTodoDialogState extends State<UpdateTodoDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 8,
-        children: [
-          Text("Update"),
-          TextButton(
-            onPressed: () {
-              widget.onDelete();
-              Navigator.of(context).pop();
-            }, 
-            style: ButtonStyle(
-              foregroundColor: WidgetStateProperty.all(Colors.red)
-            ),
-            child: Text("Delete"),
-          ),
-        ],
-      ),
+      title: Text("Update"),
       content: TextField(
         controller: controller,
         autocorrect: true,
@@ -57,11 +42,21 @@ class _UpdateTodoDialogState extends State<UpdateTodoDialog> {
           child: Text("Cancel"),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             final text = controller.text.trim();
             if (text.isNotEmpty) {
-              widget.onUpdate(text);
-              Navigator.of(context).pop();
+              try {
+                await widget.onUpdate(text);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              } on DuplicateTodoTitleException {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Duplicate Todo Title")),
+                  );
+                }
+              }
             }
           },
           child: Text("Update"),

@@ -1,7 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/services/todo_storage_service.dart';
+
+class DuplicateTodoTitleException implements Exception {
+  final String message;
+  DuplicateTodoTitleException(this.message);
+
+  @override
+  String toString() => message;
+}
 
 class TodoController {
   final TodoStorageService _storage = TodoStorageService();
@@ -13,12 +20,26 @@ class TodoController {
   }
 
   Future<void> addTodo(String title) async {
+    if (todos.value.any((todo) => todo.title == title)) {
+      throw DuplicateTodoTitleException(
+        'Todo with the title "$title" already exists.',
+      );
+    }
+
     final newTodo = Todo(title: title, isDone: false);
     todos.value = [newTodo, ...todos.value];
     await _storage.saveTodoList(todos.value);
   }
 
   Future<void> updateTodo(String title, int index) async {
+    if (todos.value.any(
+      (todo) => todo.title == title && todos.value.indexOf(todo) != index,
+    )) {
+      throw DuplicateTodoTitleException(
+        'Todo with the title "$title" already exists.',
+      );
+    }
+
     final updated = todos.value.toList();
     updated[index] = Todo(title: title, isDone: updated[index].isDone);
     todos.value = updated;
@@ -26,7 +47,8 @@ class TodoController {
   }
 
   Future<void> deleteTodo(int index) async {
-    final updated = todos.value.toList()..removeAt(index);
+    final updated = todos.value.toList();
+    updated.removeAt(index);
     todos.value = updated;
     await _storage.saveTodoList(todos.value);
   }
@@ -48,5 +70,4 @@ class TodoController {
     todos.value = newList;
     await _storage.saveTodoList(newList);
   }
-
 }

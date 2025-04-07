@@ -43,7 +43,6 @@ class _TodoItemState extends State<TodoItem> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
               icon: Icons.delete,
-              autoClose: true,
             ),
           ],
         ),
