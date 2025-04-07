@@ -8,13 +8,6 @@ import 'package:todo_native/controllers/todo_controller.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/widgets/todo_item.dart';
 
-// class TodoListView extends StatefulWidget {
-//   const TodoListView({super.key});
-
-//   @override
-//   State<TodoListView> createState() => _TodoListViewState();
-// }
-
 class TodoListView extends StatelessWidget {
   final TodoController controller;
 
@@ -47,7 +40,7 @@ class TodoListView extends StatelessWidget {
       },
       itemBuilder: (context, itemAnimation, todo, index) {
         return Reorderable(
-          key: ValueKey(todo.title),
+          key: ValueKey(index),
           builder: (context, dragAnimation, inDrag) {
             final t = dragAnimation.value;
             final elevation = lerpDouble(0, 8, t);
@@ -60,21 +53,16 @@ class TodoListView extends StatelessWidget {
               sizeFraction: 0.6,
               curve: Curves.easeInOut,
               animation: itemAnimation,
-              child: AnimatedScale(
-                scale: inDrag ? 1.1 : 1.0,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-                child: Material(
-                  color: color,
-                  elevation: elevation!,
-                  type: MaterialType.transparency,
-                  child: TodoItem(
-                    onDelete: () => controller.deleteTodo(index),
-                    onToggle: (_) => controller.toggleTodo(index),
-                    onUpdate:
-                        (newTitle) => controller.updateTodo(newTitle, index),
-                    todo: todo,
-                  ),
+              child: Material(
+                color: color,
+                elevation: elevation!,
+                type: MaterialType.transparency,
+                child: TodoItem(
+                  onDelete: () => controller.deleteTodo(index),
+                  onToggle: (_) => controller.toggleTodo(index),
+                  onUpdate:
+                      (newTitle) => controller.updateTodo(newTitle, index),
+                  todo: todo,
                 ),
               ),
             );
