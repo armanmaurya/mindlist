@@ -80,7 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Todo List')),
-      body: ImplicitlyAnimatedReorderableList<Todo>(
+      body: _todos.length == 0 ? Center(
+        child: Text("List is Empty"),
+      ) : ImplicitlyAnimatedReorderableList<Todo>(
         onReorderStarted: (item, index) {},
         items: _todos,
         areItemsTheSame: (oldItem, newItem) => oldItem.title == newItem.title,
