@@ -1,7 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:todo_native/models/todo.dart';
+import 'package:todo_native/models/todo_list.dart';
 import 'package:todo_native/screens/home.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  // Setup Hive
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDocumentDirectory = await getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
+
+  // Register the adapter
+  Hive.registerAdapter(TodoAdapter());
+  Hive.registerAdapter(TodoListAdapter());
+
+  // Open the box
+  final todoBox = await Hive.openBox<TodoList>('todoLists');
+  // Add a default list if the box is empty
+  if (todoBox.isEmpty) {
+    await todoBox.addAll([
+      TodoList(
+        title: '📝 Study',
+        items: [
+          Todo(title: 'Read Chapter 1', isDone: false),
+          Todo(title: 'Revise Notes', isDone: false),
+        ],
+      ),
+      TodoList(
+        title: '🏠 Home',
+        items: [
+          Todo(title: 'Clean Room', isDone: false),
+          Todo(title: 'Do Laundry', isDone: false),
+        ],
+      ),
+      TodoList(
+        title: '💻 Work',
+        items: [
+          Todo(title: 'Finish report', isDone: false),
+          Todo(title: 'Reply to emails', isDone: false),
+        ],
+      ),
+    ]);
+  }
+
+  // Load the initial data
+  // Run the app
   runApp(const MyApp());
 }
 
@@ -15,24 +59,9 @@ class MyApp extends StatelessWidget {
       title: 'SwiftDo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomeScreen()
+      home: HomeScreen(),
     );
   }
 }

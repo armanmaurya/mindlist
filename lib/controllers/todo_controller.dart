@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_native/models/todo.dart';
-import 'package:todo_native/services/todo_storage_service.dart';
+import 'package:hive/hive.dart';
+import '../models/todo.dart';
+import '../models/todo_list.dart';
 
 class DuplicateTodoTitleException implements Exception {
   final String message;
@@ -11,63 +12,63 @@ class DuplicateTodoTitleException implements Exception {
 }
 
 class TodoController {
-  final TodoStorageService _storage = TodoStorageService();
-
+  final Box<TodoList> _box = Hive.box<TodoList>('todoLists');
   final ValueNotifier<List<Todo>> todos = ValueNotifier([]);
+  final ValueNotifier<String> currentTitle = ValueNotifier(''); // Add this line
 
-  Future<void> loadTodos() async {
-    todos.value = await _storage.loadTodoList();
+  late int _activeListIndex = 0;
+
+  /// Set the active list you're currently editing.
+  void loadTodosForList(int index) {
+    _activeListIndex = index;
+    todos.value = _box.getAt(index)?.items ?? [];
+    currentTitle.value = _box.getAt(index)?.title ?? ''; // Update title
   }
+
+  /// Save current todos back to Hive
+  Future<void> _saveToBox() async {
+    final currentList = _box.getAt(_activeListIndex);
+    print(currentList);
+    if (currentList != null) {
+      currentList.items = todos.value;
+      await currentList.save(); // since it's a HiveObject
+    }
+  }
+
+  List<TodoList> getAllLists() => _box.values.toList();
+
+  TodoList getList(int index) => _box.getAt(index)!;
 
   Future<void> addTodo(String title) async {
     if (todos.value.any((todo) => todo.title == title)) {
-      throw DuplicateTodoTitleException(
-        'Todo with the title "$title" already exists.',
-      );
+      throw DuplicateTodoTitleException('Todo "$title" already exists.');
     }
-
     final newTodo = Todo(title: title, isDone: false);
     todos.value = [newTodo, ...todos.value];
-    await _storage.saveTodoList(todos.value);
+    await _saveToBox();
   }
 
   Future<void> updateTodo(String title, int index) async {
-    if (todos.value.any(
-      (todo) => todo.title == title && todos.value.indexOf(todo) != index,
-    )) {
-      throw DuplicateTodoTitleException(
-        'Todo with the title "$title" already exists.',
-      );
+    if (todos.value.any((todo) =>
+        todo.title == title && todos.value.indexOf(todo) != index)) {
+      throw DuplicateTodoTitleException('Todo "$title" already exists.');
     }
 
     final updated = todos.value.toList();
     updated[index] = Todo(title: title, isDone: updated[index].isDone);
     todos.value = updated;
-    await _storage.saveTodoList(todos.value);
+    await _saveToBox();
   }
 
   Future<void> deleteTodo(int index) async {
     final updated = todos.value.toList();
     updated.removeAt(index);
     todos.value = updated;
-    await _storage.saveTodoList(todos.value);
-  }
-
-  Future<void> toggleTodo(int index) async {
-    final updated = todos.value.toList();
-    final toggled = updated[index].copyWith(isDone: !updated[index].isDone);
-    updated.removeAt(index);
-    if (toggled.isDone) {
-      updated.add(toggled);
-    } else {
-      updated.insert(index == 0 ? 0 : index, toggled);
-    }
-    todos.value = updated;
-    await _storage.saveTodoList(updated);
+    await _saveToBox();
   }
 
   Future<void> saveReorderedTodos(List<Todo> newList) async {
     todos.value = newList;
-    await _storage.saveTodoList(newList);
+    await _saveToBox();
   }
 }

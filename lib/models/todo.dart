@@ -1,25 +1,14 @@
-class Todo {
-  final String title;
-  final bool isDone;
+import 'package:hive/hive.dart';
+
+part 'todo.g.dart';
+
+@HiveType(typeId: 0)
+class Todo extends HiveObject {
+  @HiveField(0)
+  String title;
+
+  @HiveField(1)
+  bool isDone;
 
   Todo({required this.title, required this.isDone});
-
-  Todo copyWith({String? title, bool? isDone}) {
-    return Todo(
-      title: title ?? this.title,
-      isDone: isDone ?? this.isDone,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'title': title,
-        'isDone': isDone,
-      };
-
-  factory Todo.fromJson(Map<String, dynamic> json) {
-    return Todo(
-      title: json['title'],
-      isDone: json['isDone'],
-    );
-  }
 }
