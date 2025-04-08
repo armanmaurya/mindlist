@@ -54,16 +54,21 @@ class TodoListView extends StatelessWidget {
               sizeFraction: 0.6,
               curve: Curves.easeInOut,
               animation: itemAnimation,
-              child: Material(
-                color: color,
-                elevation: elevation!,
-                type: MaterialType.transparency,
-                child: TodoItem(
-                  onDelete: () => controller.deleteTodo(index),
-                  onToggle: (_) => controller.toggleTodo(index),
-                  onUpdate:
-                      (newTitle) => controller.updateTodo(newTitle, index),
-                  todo: todo,
+              child: AnimatedScale(
+                scale: inDrag ? 1.1 : 1.0,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                child: Material(
+                  color: color,
+                  elevation: elevation!,
+                  type: MaterialType.transparency,
+                  child: TodoItem(
+                    onDelete: () => controller.deleteTodo(index),
+                    onToggle: (_) => controller.toggleTodo(index),
+                    onUpdate:
+                        (newTitle) => controller.updateTodo(newTitle, index),
+                    todo: todo,
+                  ),
                 ),
               ),
             );
