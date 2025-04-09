@@ -39,7 +39,6 @@ class TodoListView extends StatelessWidget {
         controller.saveReorderedTodos(newItems);
       },
       itemBuilder: (context, itemAnimation, todo, index) {
-        // Todo: Prevent the duplicate items
         return Reorderable(
           key: ValueKey(todo.title),
           builder: (context, dragAnimation, inDrag) {
@@ -66,7 +65,7 @@ class TodoListView extends StatelessWidget {
                     onDelete: () => controller.deleteTodo(index),
                     // onToggle: (_) => controller.toggleTodo(index),
                     onToggle: (_) {
-                      
+                      controller.toggleTodo(index);
                     },
                     onUpdate:
                         (newTitle) => controller.updateTodo(newTitle, index),
