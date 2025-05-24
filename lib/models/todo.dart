@@ -10,5 +10,8 @@ class Todo extends HiveObject {
   @HiveField(1)
   bool isDone;
 
-  Todo({required this.title, required this.isDone});
+  @HiveField(2)
+  String id;
+
+  Todo({required this.title, required this.isDone, required this.id});
 }

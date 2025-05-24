@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969244227772",
+    "project_id": "mindlist-c29f6",
+    "storage_bucket": "mindlist-c29f6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969244227772:android:46c06edd9eedbdf292f8b9",
+        "android_client_info": {
+          "package_name": "com.armanmaurya.mindlist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL4BmGjPLWWOYVqvELIfvnLMk-ugStBEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

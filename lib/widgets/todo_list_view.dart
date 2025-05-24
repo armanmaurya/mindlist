@@ -62,13 +62,13 @@ class TodoListView extends StatelessWidget {
                   elevation: elevation!,
                   type: MaterialType.transparency,
                   child: TodoItem(
-                    onDelete: () => controller.deleteTodo(index),
-                    // onToggle: (_) => controller.toggleTodo(index),
-                    onToggle: (_) {
-                      controller.toggleTodo(index);
-                    },
-                    onUpdate:
-                        (newTitle) => controller.updateTodo(newTitle, index),
+                    // onDelete: () => controller.deleteTodo(index),
+                    // // onToggle: (_) => controller.toggleTodo(index),
+                    // onToggle: (_) {
+                    //   controller.toggleTodo(index);
+                    // },
+                    // onUpdate:
+                    //     (newTitle) => controller.updateTodo(newTitle, index),
                     todo: todo,
                   ),
                 ),

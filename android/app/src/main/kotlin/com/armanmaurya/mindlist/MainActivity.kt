@@ -1,4 +1,4 @@
-package com.example.todo_native
+package com.armanmaurya.mindlist
 
 import io.flutter.embedding.android.FlutterActivity
 
