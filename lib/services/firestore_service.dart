@@ -100,7 +100,10 @@ class FirestoreService {
   }
 
   // Update a todo list title
-  Future<void> updateTodoList(String id, String newTitle) async {
+  Future<void> updateTodoList({
+    required String id,
+    required String newTitle,
+  }) async {
     final user = _auth.currentUser;
     if (user != null) {
       final userDoc = _firestore.collection('users').doc(user.uid);

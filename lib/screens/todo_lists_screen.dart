@@ -174,9 +174,8 @@ class _ListsScreenState extends State<ListsScreen> {
                             return EditTitleBottomSheet(
                               initialTitle: selectedList.title,
                               onSave: (newTitle) async {
-                                await FirestoreService().updateTodo(
-                                  listId: selectedList.id,
-                                  todoId: _selectedListIds.first,
+                                await FirestoreService().updateTodoList(
+                                  id: selectedList.id,
                                   newTitle: newTitle,
                                 );
                               },
