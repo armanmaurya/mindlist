@@ -1,57 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:todo_native/controllers/todo_controller.dart';
-import 'package:todo_native/screens/google_signin_screen.dart';
+import 'package:todo_native/models/todo_list.dart';
 import 'package:todo_native/widgets/add_todo.dart';
 import 'package:todo_native/widgets/todo_list_view.dart';
 import 'package:todo_native/widgets/home_app_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:todo_native/widgets/buttons/logout_button.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_native/providers/todo_provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TodoController _todoController = TodoController();
-
-  @override
-  void initState() {
-    super.initState();
-    _todoController.loadTodosForList(0); // Load the first list by default
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: HomeAppBar(todoController: _todoController),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              GoogleSignIn().signOut();
-              Navigator.pushReplacement(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => const GoogleSignInScreen(),
-                ),
-              );
-            },
-          ),
-        ],
+        title: HomeAppBar(
+          // onListSelected: (selectedList) {
+          //   todoProvider.setSelectedList(selectedList);
+          // },
+        ), 
+        actions: [const LogoutButton()],
       ),
-      body: TodoListView(controller: _todoController),
+      body: Consumer<TodoProvider>(
+        builder: (context, provider, _) {
+          if (provider.selectedList == null) {
+            return const Center(child: Text('Select a list to view todos.'));
+          }
+          return TodoListView(todos: provider.todos);
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await showModalBottomSheet(
             context: context,
-            builder: (context) => AddTodoBottomSheet(onAdd: _todoController.addTodo),
+            builder: (context) => AddTodoBottomSheet(
+              onAdd: (title) {
+                if (title.trim().isNotEmpty) {
+                  Provider.of<TodoProvider>(context, listen: false).addTodo(title);
+                }
+              },
+            ),
             useSafeArea: true,
             isScrollControlled: true,
           );

@@ -4,30 +4,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
-import 'package:todo_native/controllers/todo_controller.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/widgets/todo_item.dart';
 
 class TodoListView extends StatelessWidget {
-  final TodoController controller;
-
-  const TodoListView({super.key, required this.controller});
+  final List<Todo> todos;
+  const TodoListView({super.key, required this.todos});
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<Todo>>(
-      valueListenable: controller.todos,
-      builder: (context, todos, _) {
-        if (todos.isEmpty) {
-          return const Center(child: Text("List is Empty"));
-        }
-
-        return _buildListView(todos);
-      },
-    );
+    return _buildListView(todos);
   }
 
   Widget _buildListView(List<Todo> todos) {
+    if (todos.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
+            const SizedBox(height: 12),
+            Text(
+              'No todos yet!',
+              style: TextStyle(fontSize: 18, color: Colors.grey[500]),
+            ),
+          ],
+        ),
+      );
+    }
     return ImplicitlyAnimatedReorderableList<Todo>(
       onReorderStarted: (item, index) {
         HapticFeedback.heavyImpact();
@@ -36,7 +40,7 @@ class TodoListView extends StatelessWidget {
       items: todos,
       areItemsTheSame: (oldItem, newItem) => oldItem.title == newItem.title,
       onReorderFinished: (item, from, to, newItems) {
-        controller.saveReorderedTodos(newItems);
+        // controller.saveReorderedTodos(newItems);
       },
       itemBuilder: (context, itemAnimation, todo, index) {
         return Reorderable(
@@ -61,16 +65,7 @@ class TodoListView extends StatelessWidget {
                   color: color,
                   elevation: elevation!,
                   type: MaterialType.transparency,
-                  child: TodoItem(
-                    // onDelete: () => controller.deleteTodo(index),
-                    // // onToggle: (_) => controller.toggleTodo(index),
-                    // onToggle: (_) {
-                    //   controller.toggleTodo(index);
-                    // },
-                    // onUpdate:
-                    //     (newTitle) => controller.updateTodo(newTitle, index),
-                    todo: todo,
-                  ),
+                  child: TodoItem(todo: todo),
                 ),
               ),
             );

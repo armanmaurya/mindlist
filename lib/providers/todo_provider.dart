@@ -1,16 +1,47 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/models/todo_list.dart';
+import 'package:todo_native/services/firestore_service.dart';
 
 class TodoProvider with ChangeNotifier {
-  final Box<TodoList> _box = Hive.box<TodoList>('todoLists');
-  int _activeListIndex = 0;
+  List<Todo> _todos = [];
+  TodoList? _selectedList;
+  StreamSubscription? _todosSubscription;
 
-  List<Todo> get todos => _box.getAt(_activeListIndex)?.items ?? [];
+  List<Todo> get todos => _todos;
+  TodoList? get selectedList => _selectedList;
 
-  void setActiveList(int index) {
-    _activeListIndex = index;
-    notifyListeners();
+  void setSelectedList(TodoList? list) {
+    if (_selectedList?.id == list?.id) return; // Prevent unnecessary updates
+    _selectedList = list;
+    _todosSubscription?.cancel();
+    if (list != null) {
+      _todosSubscription = FirestoreService().todosStream(list.id).listen((snapshot) {
+        _todos = snapshot.docs.map((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
+          return Todo.fromJson(data);
+        }).toList();
+        notifyListeners();
+      });
+    } else {
+      notifyListeners();
+    }
+  }
+
+  Future<void> addTodo(String title) async {
+    print("whatthis");
+    print("selectedList: ${_selectedList?.id}");
+    if (_selectedList != null) {
+      print("alsorunned");
+      await FirestoreService().createTodo(title: title, listId: _selectedList!.id);
+    }
+  }
+
+  @override
+  void dispose() {
+    _todosSubscription?.cancel();
+    super.dispose();
   }
 }

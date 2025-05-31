@@ -117,19 +117,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
     try {
       await widget.onAdd(text);
       if (mounted) Navigator.pop(context);
-    } on DuplicateTodoTitleException {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('This task already exists'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        );
-      }
-    } finally {
+    } catch (e) {
       if (mounted) setState(() => _isSubmitting = false);
     }
   }

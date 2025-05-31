@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_native/models/todo.dart';
+import 'package:todo_native/providers/todo_provider.dart';
+import 'package:todo_native/services/firestore_service.dart';
 import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
+import 'package:todo_native/widgets/bottomSheets/edit_title_bottom_sheet.dart';
 import 'package:todo_native/widgets/bottomSheets/menu_bottom_sheet.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 
 class TodoItem extends StatefulWidget {
   final Todo todo;
-  // final Function(bool? val) onToggle;
-  // final Function(String newTitle) onUpdate;
-  // final Function() onDelete;
 
   const TodoItem({
     super.key,
-    // required this.onToggle,
-    // required this.onUpdate,
-    // required this.onDelete,
     required this.todo,
   });
 
@@ -58,8 +56,16 @@ class _TodoItemState extends State<TodoItem> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   value: widget.todo.isDone,
-                  onChanged:(value) {
-                    
+                  onChanged:(value) async {
+                    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+                    final selectedList = todoProvider.selectedList;
+                    if (selectedList != null) {
+                      await FirestoreService().toggleTodo(
+                        listId: selectedList.id,
+                        todoId: widget.todo.id,
+                        isDone: value ?? false,
+                      );
+                    }
                   },
                   activeColor: theme.colorScheme.primary,
                   side: BorderSide(
@@ -89,12 +95,38 @@ class _TodoItemState extends State<TodoItem> {
                   size: 20,
                 ),
                 onPressed: () async {
+                  final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+                  final selectedList = todoProvider.selectedList;
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
                       return MenuBottomSheet(
-                        onDelete: () {
-                          
+                        onDelete: () async {
+                          if (selectedList != null) {
+                            await FirestoreService().deleteTodo(
+                              listId: selectedList.id,
+                              todoId: widget.todo.id,
+                            );
+                          }
+                        },
+                        onEdit: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return EditTitleBottomSheet(
+                                initialTitle: widget.todo.title,
+                                onSave: (newTitle) async {
+                                  if (selectedList != null) {
+                                    await FirestoreService().updateTodo(
+                                      listId: selectedList.id,
+                                      todoId: widget.todo.id,
+                                      newTitle: newTitle,
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          );
                         },
                       );
                     },

@@ -114,7 +114,10 @@ class DeleteBottomSheet extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    onPressed: () => Navigator.of(context).pop(true),
+                    onPressed: () {
+                      if (onDelete != null) onDelete!();
+                      // Navigator.of(context).pop();
+                    },
                     child: const Text(
                       'Delete',
                       style: TextStyle(

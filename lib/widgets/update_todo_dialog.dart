@@ -63,26 +63,26 @@ class _UpdateTodoBottomSheetState extends State<UpdateTodoBottomSheet> {
                 child: const Text("Cancel"),
               ),
               const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () async {
-                  final text = controller.text.trim();
-                  if (text.isNotEmpty) {
-                    try {
-                      await widget.onUpdate(text);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    } on DuplicateTodoTitleException {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Duplicate Todo Title")),
-                        );
-                      }
-                    }
-                  }
-                },
-                child: const Text("Update"),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     final text = controller.text.trim();
+              //     if (text.isNotEmpty) {
+              //       try {
+              //         await widget.onUpdate(text);
+              //         if (context.mounted) {
+              //           Navigator.of(context).pop();
+              //         }
+              //       } on DuplicateTodoTitleException {
+              //         if (context.mounted) {
+              //           ScaffoldMessenger.of(context).showSnackBar(
+              //             const SnackBar(content: Text("Duplicate Todo Title")),
+              //           );
+              //         }
+              //       }
+              //     }
+              //   },
+              //   child: const Text("Update"),
+              // ),
             ],
           ),
           const SizedBox(height: 8),

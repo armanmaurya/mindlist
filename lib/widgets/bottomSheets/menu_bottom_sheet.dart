@@ -38,7 +38,6 @@ class MenuBottomSheet extends StatelessWidget {
               title: 'Edit',
               color: colors.primary,
               onTap: () {
-                Navigator.of(context).pop();
                 if (onEdit != null) onEdit!();
               },
             ),
@@ -63,6 +62,7 @@ class MenuBottomSheet extends StatelessWidget {
                   builder: (context) {
                     return DeleteBottomSheet(
                       onDelete: () {
+                        if (onDelete != null) onDelete!();
                         Navigator.pop(context);
                       },
                     );

@@ -1,15 +1,26 @@
-import 'package:hive/hive.dart';
 import 'todo.dart';
 
-part 'todo_list.g.dart';
-
-@HiveType(typeId: 1)
-class TodoList extends HiveObject {
-  @HiveField(0)
+class TodoList {
+  String id;
   String title;
-
-  @HiveField(1)
   List<Todo> items;
 
-  TodoList({required this.title, required this.items});
+  TodoList({required this.id, required this.title, required this.items});
+
+  factory TodoList.fromJson(Map<String, dynamic> json) {
+    return TodoList(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String,
+      items: (json['items'] as List<dynamic>?)
+              ?.map((e) => Todo.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
 }
