@@ -28,7 +28,7 @@ jobs:
         run: yes | flutter doctor --android-licenses
 
       - name: Decode keystore from secret
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/mindlist-keystore.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/mindlist-keystore.jks
 
       - name: Create key.properties
         run: |
