@@ -16,14 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache Pub packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -32,51 +24,33 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Setup keystore file
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/mindlist-keystore.jks
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
 
-      - name: Generate key.properties
-        run: |
-          cat > android/key.properties <<EOF
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          storeFile=mindlist-keystore.jks
-          EOF
+      - name: Decode keystore from secret
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/mindlist-keystore.jks
 
-      - name: Build APKs (split)
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=mindlist-keystore.jks" >> android/key.properties
+
+      - name: Build APKs (split-per-abi)
         run: flutter build apk --split-per-abi --release
 
       - name: Build AAB
         run: flutter build appbundle --release
 
       - name: Upload artifacts to GitHub Release
-        id: upload_release
-        run: |
-          files_to_upload=""
-
-          for file in \
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
-            build/app/outputs/flutter-apk/app-x86_64-release.apk \
-            build/app/outputs/bundle/release/app-release.aab
-          do
-            if [ -f "$file" ]; then
-              files_to_upload="$files_to_upload $file"
-            else
-              echo "File not found: $file"
-            fi
-          done
-
-          echo "files=$files_to_upload" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release with artifacts
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ steps.upload_release.outputs.files }}
+          files: |
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-release.apk
+            build/app/outputs/bundle/release/app-release.aab
           draft: true
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
