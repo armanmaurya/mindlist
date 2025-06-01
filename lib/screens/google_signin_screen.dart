@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:todo_native/screens/todo_lists_screen.dart';
 import 'package:todo_native/services/auth_service.dart';
-import 'package:todo_native/screens/home_screen.dart';
 import 'package:todo_native/widgets/buttons/google_signin_button.dart';
 
 class GoogleSignInScreen extends StatefulWidget {
@@ -11,54 +12,145 @@ class GoogleSignInScreen extends StatefulWidget {
   State<GoogleSignInScreen> createState() => _GoogleSignInScreenState();
 }
 
-class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
+class _GoogleSignInScreenState extends State<GoogleSignInScreen>
+    with SingleTickerProviderStateMixin {
   bool _isSigningIn = false;
   String? _error;
   final AuthService _authService = AuthService();
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+    
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+    
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _signInWithGoogle() async {
     setState(() {
       _isSigningIn = true;
       _error = null;
     });
+    
     try {
-      // Always sign out first to force account picker
       await _authService.signOut();
       final userCredential = await _authService.signInWithGoogle();
+      
       if (userCredential == null) {
-        setState(() {
-          _isSigningIn = false;
-        });
-        return; // User cancelled
+        if (mounted) {
+          setState(() {
+            _isSigningIn = false;
+          });
+        }
+        return;
       }
+      
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        CupertinoPageRoute(builder: (context) => const HomeScreen()),
+        CupertinoPageRoute(builder: (context) => const TodoListsScreen()),
       );
     } catch (e) {
       print('Sign in failed: $e');
+      if (mounted) {
+        setState(() {
+          _isSigningIn = false;
+          _error = 'Sign in failed. Please try again.';
+          _controller.animateBack(0.7).then((_) => _controller.forward());
+        });
+      }
+    }
+    
+    if (mounted) {
       setState(() {
         _isSigningIn = false;
-        _error = 'Sign in failed: ${e.toString()}';
       });
     }
-    setState(() {
-      _isSigningIn = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final size = MediaQuery.of(context).size;
+    
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign in with Google')),
-      body: Center(
+      body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: GoogleSignInButton(
-            isSigningIn: _isSigningIn,
-            onPressed: _signInWithGoogle,
-            error: _error,
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [              
+                Column(
+                  children: [
+                    Text(
+                      'Organize Your Tasks',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Sign in to access your todo lists\nacross all your devices',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
+                    GoogleSignInButton(
+                      isSigningIn: _isSigningIn,
+                      onPressed: _signInWithGoogle,
+                      error: _error,
+                    ),
+                    if (_error != null) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        _error!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.error,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

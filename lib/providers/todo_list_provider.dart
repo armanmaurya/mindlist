@@ -4,18 +4,24 @@ import 'package:todo_native/services/firestore_service.dart';
 
 class ListProvider extends ChangeNotifier {
   List<TodoList> _todoLists = [];
-  String? _selectedList;
+  TodoList? _selectedList;
 
   List<TodoList> get todoLists => _todoLists;
-  String? get selectedList => _selectedList;
+  TodoList? get selectedList => _selectedList;
 
-  void selectList(String title) {
-    _selectedList = title;
+  void selectList(TodoList list) {
+    _selectedList = list;
     notifyListeners();
   }
 
   void _setTodoLists(List<TodoList> lists) {
     _todoLists = lists;
+    notifyListeners();
+  }
+
+  void setSelectedList(TodoList list) {
+    if (_selectedList == list) return; // Prevent unnecessary updates
+    _selectedList = list;
     notifyListeners();
   }
 

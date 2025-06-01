@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBL4BmGjPLWWOYVqvELIfvnLMk-ugStBEI',
-    appId: '1:969244227772:android:46c06edd9eedbdf292f8b9',
+    appId: '1:969244227772:android:d482c690d7e3f12992f8b9',
     messagingSenderId: '969244227772',
     projectId: 'mindlist-c29f6',
     storageBucket: 'mindlist-c29f6.firebasestorage.app',

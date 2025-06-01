@@ -1,25 +1,29 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_native/screens/todo_screen.dart';
 import 'package:todo_native/services/firestore_service.dart';
 import 'package:todo_native/models/todo_list.dart';
 import 'package:todo_native/widgets/bottomSheets/create_list_bottom_sheet.dart';
 import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
 import 'package:todo_native/widgets/bottomSheets/edit_title_bottom_sheet.dart';
+import 'package:todo_native/widgets/buttons/logout_button.dart';
 import 'package:todo_native/widgets/list_tiles/todo_list_tile.dart';
 import 'package:todo_native/widgets/lists_views/todo_list.dart';
 import 'package:todo_native/providers/todo_list_provider.dart';
 
-class ListsScreen extends StatefulWidget {
-  const ListsScreen({super.key});
+class TodoListsScreen extends StatefulWidget {
+  const TodoListsScreen({super.key});
 
   @override
-  State<ListsScreen> createState() => _ListsScreenState();
+  State<TodoListsScreen> createState() => _TodoListsScreenState();
 }
 
-class _ListsScreenState extends State<ListsScreen> {
+class _TodoListsScreenState extends State<TodoListsScreen> {
   List<String> _selectedListIds = [];
   bool _selectionMode = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -33,10 +37,17 @@ class _ListsScreenState extends State<ListsScreen> {
     super.dispose();
   }
 
-  void handleTap(String id) {
+  void handleTap(TodoList list) {
     if (_selectionMode) {
-      toggleSelection(id);
-    } else {}
+      toggleSelection(list.id);
+    } else {
+      final listProvider = Provider.of<ListProvider>(context, listen: false);
+      listProvider.setSelectedList(list);
+      Navigator.push(
+        context,
+        CupertinoPageRoute(builder: (context) => TodosScreen()),
+      );
+    }
   }
 
   void _handleLongPress(String id) {
@@ -140,14 +151,20 @@ class _ListsScreenState extends State<ListsScreen> {
                         builder: (context) {
                           return DeleteBottomSheet(
                             onDelete: () async {
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                              setState(() {
+                                isLoading = true;
+                              });
                               final success = await FirestoreService()
                                   .deleteMultipleTodoLists(_selectedListIds);
                               if (success) {
                                 setState(() {
                                   _selectedListIds.clear();
                                   _selectionMode = false;
+                                  isLoading = false;
                                 });
-                                Navigator.pop(context);
                               }
                             },
                           );
@@ -186,29 +203,38 @@ class _ListsScreenState extends State<ListsScreen> {
                     ),
                 ],
               )
-              : AppBar(title: const Text('Todo Lists')),
-      body: Consumer<ListProvider>(
-        builder: (context, provider, _) {
-          return ListView.separated(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: provider.todoLists.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 8.0),
-            itemBuilder: (context, index) {
-              final list = provider.todoLists[index];
-              return TodoListTile(
-                list: list,
-                isSelected: _selectedListIds.contains(list.id),
-                theme: theme,
-                onTap: () {
-                  handleTap(list.id);
-                },
-                onLongPress: () {
-                  _handleLongPress(list.id);
+              : AppBar(
+                title: const Text('Todo Lists'),
+                actions: [LogoutButton()],
+              ),
+      body: Stack(
+        children: [
+          Consumer<ListProvider>(
+            builder: (context, provider, _) {
+              return ListView.separated(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: provider.todoLists.length,
+                separatorBuilder:
+                    (context, index) => const SizedBox(height: 8.0),
+                itemBuilder: (context, index) {
+                  final list = provider.todoLists[index];
+                  return TodoListTile(
+                    list: list,
+                    isSelected: _selectedListIds.contains(list.id),
+                    theme: theme,
+                    onTap: () {
+                      handleTap(list);
+                    },
+                    onLongPress: () {
+                      _handleLongPress(list.id);
+                    },
+                  );
                 },
               );
             },
-          );
-        },
+          ),
+          if (isLoading) const Center(child: CircularProgressIndicator()),
+        ],
       ),
       floatingActionButton: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),

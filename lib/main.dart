@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/models/todo_list.dart';
-import 'package:todo_native/screens/home_screen.dart';
+import 'package:todo_native/screens/todo_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_native/screens/todo_lists_screen.dart';
 import 'firebase_options.dart';
@@ -31,27 +31,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
       title: 'SwiftDo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (snapshot.hasData && snapshot.data != null) {
-            return const ListsScreen();
-          } else {
-            return const GoogleSignInScreen();
-          }
-        },
-      ),
+      home: user == null
+          ? const GoogleSignInScreen()
+          : const TodoListsScreen(),
     );
   }
 }

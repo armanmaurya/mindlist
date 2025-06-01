@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_native/models/todo.dart';
+import 'package:todo_native/providers/todo_list_provider.dart';
 import 'package:todo_native/providers/todo_provider.dart';
 import 'package:todo_native/services/firestore_service.dart';
 import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
@@ -57,7 +58,7 @@ class _TodoItemState extends State<TodoItem> {
                   ),
                   value: widget.todo.isDone,
                   onChanged:(value) async {
-                    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+                    final todoProvider = Provider.of<ListProvider>(context, listen: false);
                     final selectedList = todoProvider.selectedList;
                     if (selectedList != null) {
                       await FirestoreService().toggleTodo(
@@ -95,7 +96,7 @@ class _TodoItemState extends State<TodoItem> {
                   size: 20,
                 ),
                 onPressed: () async {
-                  final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+                  final todoProvider = Provider.of<ListProvider>(context, listen: false);
                   final selectedList = todoProvider.selectedList;
                   showModalBottomSheet(
                     context: context,
@@ -110,8 +111,12 @@ class _TodoItemState extends State<TodoItem> {
                           }
                         },
                         onEdit: () {
+                          Navigator.pop(context); // Close the menu
                           showModalBottomSheet(
                             context: context,
+                            useSafeArea: true,
+                            isScrollControlled: true,
+                            isDismissible: true,
                             builder: (context) {
                               return EditTitleBottomSheet(
                                 initialTitle: widget.todo.title,
