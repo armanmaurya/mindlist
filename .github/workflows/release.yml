@@ -3,7 +3,7 @@ name: Release Flutter Android
 on:
   push:
     tags:
-      - 'v*'  # Triggers on version tags like v1.0.0
+      - 'v*'  # Trigger on version tags like v1.0.0
 
 permissions:
   contents: write
@@ -25,7 +25,7 @@ jobs:
         run: flutter pub get
 
       - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses
+        run: yes | flutter doctor --android-licenses
 
       - name: Decode keystore from secret
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/mindlist-keystore.jks
