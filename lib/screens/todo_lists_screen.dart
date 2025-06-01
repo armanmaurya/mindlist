@@ -10,7 +10,6 @@ import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
 import 'package:todo_native/widgets/bottomSheets/edit_title_bottom_sheet.dart';
 import 'package:todo_native/widgets/buttons/logout_button.dart';
 import 'package:todo_native/widgets/list_tiles/todo_list_tile.dart';
-import 'package:todo_native/widgets/lists_views/todo_list.dart';
 import 'package:todo_native/providers/todo_list_provider.dart';
 
 class TodoListsScreen extends StatefulWidget {

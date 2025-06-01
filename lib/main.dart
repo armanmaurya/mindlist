@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_native/models/todo.dart';
-import 'package:todo_native/models/todo_list.dart';
-import 'package:todo_native/screens/todo_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_native/screens/todo_lists_screen.dart';
 import 'firebase_options.dart';
@@ -33,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
-      title: 'SwiftDo',
+      title: 'Mindlist',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
