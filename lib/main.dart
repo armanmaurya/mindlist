@@ -33,8 +33,12 @@ class MyApp extends StatelessWidget {
       title: 'Mindlist',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.light),
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
+      ),
+      themeMode: ThemeMode.system,
       home: user == null
           ? const GoogleSignInScreen()
           : const TodoListsScreen(),

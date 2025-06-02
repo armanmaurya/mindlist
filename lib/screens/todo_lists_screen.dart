@@ -66,6 +66,13 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
     });
   }
 
+  void _clearSelection() {
+    setState(() {
+      _selectedListIds.clear();
+      _selectionMode = false;
+    });
+  }
+
   Future<void> _deleteSelected() async {
     if (_selectedListIds.isEmpty) return;
     showModalBottomSheet(
@@ -198,6 +205,7 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
                             );
                           },
                         );
+                        _clearSelection();
                       },
                     ),
                 ],

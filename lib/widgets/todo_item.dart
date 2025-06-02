@@ -27,8 +27,9 @@ class _TodoItemState extends State<TodoItem> {
 
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    final completedColor = isDarkMode ? Colors.grey[800]! : Colors.grey[200]!;
-    final activeColor = isDarkMode ? Colors.grey[700]! : Colors.grey[300]!;
+    // Use theme color for the todo card
+    final completedColor = theme.colorScheme.surfaceContainerHighest;
+    final activeColor = theme.colorScheme.surfaceContainerLow;
 
     return GestureDetector(
       child: AnimatedContainer(
@@ -39,7 +40,7 @@ class _TodoItemState extends State<TodoItem> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: theme.shadowColor.withOpacity(0.08),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -69,6 +70,7 @@ class _TodoItemState extends State<TodoItem> {
                     }
                   },
                   activeColor: theme.colorScheme.primary,
+                  checkColor: isDarkMode ? Colors.black : Colors.white,
                   side: BorderSide(
                     color: theme.colorScheme.primary.withOpacity(0.6),
                     width: 1.5,
@@ -82,17 +84,18 @@ class _TodoItemState extends State<TodoItem> {
                       widget.todo.isDone
                           ? TextDecoration.lineThrough
                           : TextDecoration.none,
-                  color:
-                      widget.todo.isDone
-                          ? theme.textTheme.bodyLarge?.color?.withOpacity(0.5)
-                          : theme.textTheme.bodyLarge?.color,
+                  color: widget.todo.isDone
+                      ? theme.textTheme.bodyLarge?.color?.withOpacity(0.5)
+                      : theme.textTheme.bodyLarge?.color,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               trailing: IconButton(
                 icon: Icon(
                   Icons.edit,
-                  color: theme.colorScheme.primary.withOpacity(0.7),
+                  color: theme.brightness == Brightness.dark
+                      ? theme.colorScheme.primary.withOpacity(0.85)
+                      : theme.colorScheme.primary.withOpacity(0.7),
                   size: 20,
                 ),
                 onPressed: () async {
