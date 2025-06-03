@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
       ),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       home: user == null
           ? const GoogleSignInScreen()
           : const TodoListsScreen(),
