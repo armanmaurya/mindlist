@@ -1,13 +1,11 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_native/screens/todo_screen.dart';
 import 'package:todo_native/services/firestore_service.dart';
 import 'package:todo_native/models/todo_list.dart';
-import 'package:todo_native/widgets/bottomSheets/create_list_bottom_sheet.dart';
-import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
-import 'package:todo_native/widgets/bottomSheets/edit_title_bottom_sheet.dart';
+import 'package:todo_native/widgets/bottom_sheets/delete_confirmation_bottom_sheet.dart';
+import 'package:todo_native/widgets/bottom_sheets/edit_text_bottom_sheet.dart';
 import 'package:todo_native/widgets/buttons/logout_button.dart';
 import 'package:todo_native/widgets/list_tiles/todo_list_tile.dart';
 import 'package:todo_native/providers/todo_list_provider.dart';
@@ -73,30 +71,30 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
     });
   }
 
-  Future<void> _deleteSelected() async {
-    if (_selectedListIds.isEmpty) return;
-    showModalBottomSheet(
-      context: context,
-      useSafeArea: true,
-      isScrollControlled: true,
-      isDismissible: true,
-      builder: (context) {
-        return DeleteBottomSheet(
-          onDelete: () async {
-            final success = await FirestoreService().deleteMultipleTodoLists(
-              _selectedListIds,
-            );
-            if (success) {
-              setState(() {
-                _selectedListIds.clear();
-                _selectionMode = false;
-              });
-            }
-          },
-        );
-      },
-    );
-  }
+  // Future<void> _deleteSelected() async {
+  //   if (_selectedListIds.isEmpty) return;
+  //   showModalBottomSheet(
+  //     context: context,
+  //     useSafeArea: true,
+  //     isScrollControlled: true,
+  //     isDismissible: true,
+  //     builder: (context) {
+  //       return DeleteBottomSheet(
+  //         onDelete: () async {
+  //           final success = await FirestoreService().deleteMultipleTodoLists(
+  //             _selectedListIds,
+  //           );
+  //           if (success) {
+  //             setState(() {
+  //               _selectedListIds.clear();
+  //               _selectionMode = false;
+  //             });
+  //           }
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   void toggleSelection(String id) {
     setState(() {
@@ -194,14 +192,17 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
                           isScrollControlled: true,
                           isDismissible: true,
                           builder: (context) {
-                            return EditTitleBottomSheet(
-                              initialTitle: selectedList.title,
-                              onSave: (newTitle) async {
+                            return EditTextBottomSheet(
+                              initialText: selectedList.title,
+                              onSave: (newText) async {
                                 await FirestoreService().updateTodoList(
                                   id: selectedList.id,
-                                  newTitle: newTitle,
+                                  newTitle: newText,
                                 );
                               },
+                              title: 'Edit Todo List',
+                              buttonText: 'Save',
+                              hintText: 'Enter new list title',
                             );
                           },
                         );
@@ -261,11 +262,14 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
                       isDismissible: true,
                       context: context,
                       builder: (context) {
-                        return CreateListBottomSheet(
-                          onListCreated: (title) {
+                        return EditTextBottomSheet(
+                          onSave: (title) {
                             FirestoreService().createTodoList(title: title);
                             Navigator.pop(context);
                           },
+                          title: 'Create Todo List',
+                          buttonText: 'Create',
+                          hintText: 'Enter list name',
                         );
                       },
                     );

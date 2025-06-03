@@ -1,31 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:todo_native/widgets/buttons/primary_buttom.dart';
 
-class EditTitleBottomSheet extends StatefulWidget {
-  final String initialTitle;
-  final Function(String) onSave;
-
-  const EditTitleBottomSheet({
+class EditTextBottomSheet extends StatefulWidget {
+  final void Function(String) onSave;
+  final String? initialText;
+  final String title;
+  final String buttonText;
+  final String hintText;
+  const EditTextBottomSheet({
     super.key,
-    required this.initialTitle,
     required this.onSave,
+    this.initialText,
+    required this.title,
+    required this.buttonText,
+    required this.hintText,
   });
 
   @override
-  State<EditTitleBottomSheet> createState() => _EditTitleBottomSheetState();
+  State<EditTextBottomSheet> createState() => _EditTextBottomSheetState();
 }
 
-class _EditTitleBottomSheetState extends State<EditTitleBottomSheet> {
-  late final TextEditingController _controller;
+class _EditTextBottomSheetState extends State<EditTextBottomSheet> {
+  late final TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialTitle);
+    controller = TextEditingController(text: widget.initialText ?? '');
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -43,9 +49,7 @@ class _EditTitleBottomSheetState extends State<EditTitleBottomSheet> {
       ),
       decoration: BoxDecoration(
         color: isDarkMode ? theme.cardColor : Colors.white,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(24),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -55,7 +59,7 @@ class _EditTitleBottomSheetState extends State<EditTitleBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Edit Name',
+                widget.title,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -69,12 +73,12 @@ class _EditTitleBottomSheetState extends State<EditTitleBottomSheet> {
           ),
           const SizedBox(height: 16),
           TextField(
-            controller: _controller,
+            controller: controller,
             autofocus: true,
             maxLength: 28,
             style: theme.textTheme.bodyLarge,
             decoration: InputDecoration(
-              hintText: 'Start typing...',
+              hintText: widget.hintText,
               filled: true,
               fillColor: isDarkMode ? Colors.grey[900] : Colors.grey[100],
               border: OutlineInputBorder(
@@ -90,29 +94,14 @@ class _EditTitleBottomSheetState extends State<EditTitleBottomSheet> {
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
+            child: PrimaryButtom(
+              text: widget.buttonText,
               onPressed: () {
-                if (_controller.text.trim().isNotEmpty) {
-                  widget.onSave(_controller.text.trim());
-                  Navigator.pop(context);
+                final text = controller.text.trim();
+                if (text.isNotEmpty) {
+                  widget.onSave.call(text);
                 }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Save Changes',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
             ),
           ),
         ],

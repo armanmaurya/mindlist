@@ -18,8 +18,6 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
   String? _error;
   final AuthService _authService = AuthService();
   late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -30,22 +28,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
       vsync: this,
     );
     
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
     
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
     
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _controller.forward();
@@ -104,7 +87,6 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final size = MediaQuery.of(context).size;
     
     return Scaffold(
       body: SafeArea(

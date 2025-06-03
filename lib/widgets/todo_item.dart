@@ -2,20 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/providers/todo_list_provider.dart';
-import 'package:todo_native/providers/todo_provider.dart';
 import 'package:todo_native/services/firestore_service.dart';
-import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
-import 'package:todo_native/widgets/bottomSheets/edit_title_bottom_sheet.dart';
-import 'package:todo_native/widgets/bottomSheets/menu_bottom_sheet.dart';
+import 'package:todo_native/widgets/bottom_sheets/edit_text_bottom_sheet.dart';
+import 'package:todo_native/widgets/bottom_sheets/menu_bottom_sheet.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 
 class TodoItem extends StatefulWidget {
   final Todo todo;
 
-  const TodoItem({
-    super.key,
-    required this.todo,
-  });
+  const TodoItem({super.key, required this.todo});
 
   @override
   State<TodoItem> createState() => _TodoItemState();
@@ -24,7 +19,6 @@ class TodoItem extends StatefulWidget {
 class _TodoItemState extends State<TodoItem> {
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     // Use theme color for the todo card
@@ -58,8 +52,11 @@ class _TodoItemState extends State<TodoItem> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   value: widget.todo.isDone,
-                  onChanged:(value) async {
-                    final todoProvider = Provider.of<ListProvider>(context, listen: false);
+                  onChanged: (value) async {
+                    final todoProvider = Provider.of<ListProvider>(
+                      context,
+                      listen: false,
+                    );
                     final selectedList = todoProvider.selectedList;
                     if (selectedList != null) {
                       await FirestoreService().toggleTodo(
@@ -84,22 +81,27 @@ class _TodoItemState extends State<TodoItem> {
                       widget.todo.isDone
                           ? TextDecoration.lineThrough
                           : TextDecoration.none,
-                  color: widget.todo.isDone
-                      ? theme.textTheme.bodyLarge?.color?.withOpacity(0.5)
-                      : theme.textTheme.bodyLarge?.color,
+                  color:
+                      widget.todo.isDone
+                          ? theme.textTheme.bodyLarge?.color?.withOpacity(0.5)
+                          : theme.textTheme.bodyLarge?.color,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               trailing: IconButton(
                 icon: Icon(
                   Icons.edit,
-                  color: theme.brightness == Brightness.dark
-                      ? theme.colorScheme.primary.withOpacity(0.85)
-                      : theme.colorScheme.primary.withOpacity(0.7),
+                  color:
+                      theme.brightness == Brightness.dark
+                          ? theme.colorScheme.primary.withOpacity(0.85)
+                          : theme.colorScheme.primary.withOpacity(0.7),
                   size: 20,
                 ),
                 onPressed: () async {
-                  final todoProvider = Provider.of<ListProvider>(context, listen: false);
+                  final todoProvider = Provider.of<ListProvider>(
+                    context,
+                    listen: false,
+                  );
                   final selectedList = todoProvider.selectedList;
                   showModalBottomSheet(
                     context: context,
@@ -121,17 +123,20 @@ class _TodoItemState extends State<TodoItem> {
                             isScrollControlled: true,
                             isDismissible: true,
                             builder: (context) {
-                              return EditTitleBottomSheet(
-                                initialTitle: widget.todo.title,
-                                onSave: (newTitle) async {
+                              return EditTextBottomSheet(
+                                initialText: widget.todo.title,
+                                onSave: (newText) async {
                                   if (selectedList != null) {
                                     await FirestoreService().updateTodo(
                                       listId: selectedList.id,
                                       todoId: widget.todo.id,
-                                      newTitle: newTitle,
+                                      newTitle: newText,
                                     );
                                   }
                                 },
+                                title: 'Edit Todo',
+                                buttonText: 'Save',
+                                hintText: 'Enter new todo title',
                               );
                             },
                           );

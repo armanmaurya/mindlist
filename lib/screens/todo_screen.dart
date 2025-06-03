@@ -1,24 +1,15 @@
 import 'dart:async';
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_native/models/todo.dart';
 import 'package:todo_native/models/todo_list.dart';
 import 'package:todo_native/providers/todo_list_provider.dart';
-// import 'package:todo_native/providers/todo_provider.dart';
-import 'package:todo_native/widgets/add_todo.dart';
+import 'package:todo_native/widgets/bottom_sheets/edit_text_bottom_sheet.dart';
 import 'package:todo_native/widgets/todo_list_view.dart';
-// import 'package:todo_native/widgets/home_app_bar.dart';
-// import 'package:todo_native/widgets/buttons/logout_button.dart';
-// import 'package:provider/provider.dart';
-// import 'package:todo_native/providers/todo_provider.dart';
 import 'package:todo_native/services/firestore_service.dart';
 
 class TodosScreen extends StatefulWidget {
-  // final TodoList selectedList;
-  const TodosScreen({super.key, 
-  // required this.selectedList
-  });
+  const TodosScreen({super.key});
 
   @override
   State<TodosScreen> createState() => _TodosScreenState();
@@ -78,17 +69,19 @@ class _TodosScreenState extends State<TodosScreen> {
         onPressed: () async {
           await showModalBottomSheet(
             context: context,
-            builder:
-                (context) => AddTodoBottomSheet(
-                  onAdd: (title) async {
-                    if (title.trim().isNotEmpty && selectedList != null) {
-                      await FirestoreService().createTodo(
-                        listId: selectedList.id,
-                        title: title.trim(),
-                      );
-                    }
-                  },
-                ),
+            builder: (context) => EditTextBottomSheet(
+              onSave: (title) async {
+                if (title.trim().isNotEmpty && selectedList != null) {
+                  await FirestoreService().createTodo(
+                    listId: selectedList.id,
+                    title: title.trim(),
+                  );
+                }
+              },
+              title: 'Create Todo',
+              buttonText: 'Create',
+              hintText: 'Enter todo title',
+            ),
             useSafeArea: true,
             isScrollControlled: true,
           );

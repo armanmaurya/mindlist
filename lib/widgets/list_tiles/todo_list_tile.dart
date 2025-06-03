@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_native/models/todo_list.dart';
-import 'package:todo_native/providers/todo_provider.dart';
-import 'package:todo_native/services/firestore_service.dart';
-import 'package:todo_native/widgets/bottomSheets/edit_title_bottom_sheet.dart';
-import 'package:todo_native/widgets/bottomSheets/menu_bottom_sheet.dart';
 
 class TodoListTile extends StatelessWidget {
   final TodoList list;

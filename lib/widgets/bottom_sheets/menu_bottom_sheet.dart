@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_native/models/todo.dart';
-import 'package:todo_native/widgets/bottomSheets/delete_bottom_sheet.dart';
+import 'package:todo_native/widgets/bottom_sheets/delete_confirmation_bottom_sheet.dart';
 
 class MenuBottomSheet extends StatelessWidget {
   final VoidCallback? onEdit;
