@@ -1,16 +1,73 @@
-# todo_native
+# Mindlist
 
-A new Flutter project.
+<p align="center">
+    <a href="https://flutter.dev">
+        <img src="https://img.shields.io/badge/Flutter-3.19.2-blue?logo=flutter" alt="Flutter" />
+    </a>
+    <a href="https://firebase.google.com">
+        <img src="https://img.shields.io/badge/Firebase-Enabled-yellow?logo=firebase" alt="Firebase" />
+    </a>
+    <a href="LICENSE">
+        <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" />
+    </a>
+    <img src="https://img.shields.io/badge/Platform-Android-blue" alt="Platform" />
+</p>
 
-## Getting Started
+</p>
 
-This project is a starting point for a Flutter application.
+## Description
+Mindlist is a modern, cross-platform todo list manager built with Flutter and Firebase. It features multi-list management, Google sign-in, real-time sync, beautiful UI, and robust dark mode support. Organize your tasks and lists with ease, anywhere, anytime.
 
-A few resources to get you started if this is your first Flutter project:
+<!-- ## 🚀 Project Demo -->
+<!-- Add a link to your demo video or live web version here -->
+<!-- [Project Demo Video](https://your-demo-link.com) -->
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<!-- ## 📸 Project Screenshots -->
+<!-- | Light Mode | Dark Mode | -->
+<!-- |---|---| -->
+<!-- | ![Light](assets/images/screenshot_light.png) | ![Dark](assets/images/screenshot_dark.png) | -->
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ✨ Features
+- Google Sign-In authentication
+- Create, edit, and delete todo lists
+- Add, edit, complete, and delete todos
+- Multi-select and bulk actions for lists
+- Animated transitions and modern UI
+- Real-time sync with Firebase
+- Dark mode and system theme support
+- Responsive design for mobile and web
+
+## 🛠️ Installation Steps
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/yourusername/mindlist.git
+   cd mindlist
+   ```
+2. **Install dependencies:**
+   ```sh
+   flutter pub get
+   ```
+3. **Set up Firebase:**
+   - Add your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) to the respective folders.
+   - Update `firebase_options.dart` if needed.
+4. **Run the app:**
+   ```sh
+   flutter run
+   ```
+
+## 🤝 Contribution Guidelines (Optional)
+- Fork the repository
+- Create your feature branch (`git checkout -b feature/YourFeature`)
+- Commit your changes (`git commit -am 'Add new feature'`)
+- Push to the branch (`git push origin feature/YourFeature`)
+- Open a Pull Request
+
+## 🧰 Technologies Used
+- [Flutter](https://flutter.dev)
+- [Firebase Auth & Firestore](https://firebase.google.com)
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 💬 Support
+For support, open an issue or contact [your.email@example.com](mailto:mauryaarman5@gmail.com).
