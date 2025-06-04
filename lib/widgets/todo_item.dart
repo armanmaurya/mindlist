@@ -127,11 +127,12 @@ class _TodoItemState extends State<TodoItem> {
                                 initialText: widget.todo.title,
                                 onSave: (newText) async {
                                   if (selectedList != null) {
-                                    await FirestoreService().updateTodo(
+                                    FirestoreService().updateTodo(
                                       listId: selectedList.id,
                                       todoId: widget.todo.id,
                                       newTitle: newText,
                                     );
+                                    Navigator.pop(context);
                                   }
                                 },
                                 title: 'Edit Todo',

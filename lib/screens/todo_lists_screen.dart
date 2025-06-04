@@ -195,10 +195,11 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
                             return EditTextBottomSheet(
                               initialText: selectedList.title,
                               onSave: (newText) async {
-                                await FirestoreService().updateTodoList(
+                                FirestoreService().updateTodoList(
                                   id: selectedList.id,
                                   newTitle: newText,
                                 );
+                                Navigator.pop(context);
                               },
                               title: 'Edit Todo List',
                               buttonText: 'Save',

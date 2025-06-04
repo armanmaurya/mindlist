@@ -72,10 +72,11 @@ class _TodosScreenState extends State<TodosScreen> {
             builder: (context) => EditTextBottomSheet(
               onSave: (title) async {
                 if (title.trim().isNotEmpty && selectedList != null) {
-                  await FirestoreService().createTodo(
+                  FirestoreService().createTodo(
                     listId: selectedList.id,
                     title: title.trim(),
                   );
+                  Navigator.pop(context);
                 }
               },
               title: 'Create Todo',
