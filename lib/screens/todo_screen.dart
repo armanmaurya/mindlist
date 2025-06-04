@@ -60,11 +60,54 @@ class _TodosScreenState extends State<TodosScreen> {
   Widget build(BuildContext context) {
     final listProvider = Provider.of<ListProvider>(context);
     final selectedList = listProvider.selectedList;
+    final undoneTodos = _todos.where((t) => !t.isDone).toList();
+    final doneTodos = _todos.where((t) => t.isDone).toList();
+
+    Widget buildBody() {
+      if (_isLoading) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (_todos.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
+              const SizedBox(height: 12),
+              Text(
+                'No todos yet!',
+                style: TextStyle(fontSize: 18, color: Colors.grey[500]),
+              ),
+            ],
+          ),
+        );
+      }
+      return ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          if (undoneTodos.isNotEmpty)
+            TodoListView(todos: undoneTodos),
+          if (doneTodos.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 8.0, horizontal: 16.0),
+              child: Text(
+                'Completed',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ),
+            TodoListView(todos: doneTodos),
+          ],
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(selectedList?.title ?? 'Todos')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : TodoListView(todos: _todos),
+      body: buildBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await showModalBottomSheet(

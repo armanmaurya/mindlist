@@ -17,21 +17,6 @@ class TodoListView extends StatelessWidget {
   }
 
   Widget _buildListView(List<Todo> todos) {
-    if (todos.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 12),
-            Text(
-              'No todos yet!',
-              style: TextStyle(fontSize: 18, color: Colors.grey[500]),
-            ),
-          ],
-        ),
-      );
-    }
     return ImplicitlyAnimatedReorderableList<Todo>(
       onReorderStarted: (item, index) {
         HapticFeedback.heavyImpact();

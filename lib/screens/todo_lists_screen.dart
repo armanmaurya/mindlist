@@ -71,31 +71,6 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
     });
   }
 
-  // Future<void> _deleteSelected() async {
-  //   if (_selectedListIds.isEmpty) return;
-  //   showModalBottomSheet(
-  //     context: context,
-  //     useSafeArea: true,
-  //     isScrollControlled: true,
-  //     isDismissible: true,
-  //     builder: (context) {
-  //       return DeleteBottomSheet(
-  //         onDelete: () async {
-  //           final success = await FirestoreService().deleteMultipleTodoLists(
-  //             _selectedListIds,
-  //           );
-  //           if (success) {
-  //             setState(() {
-  //               _selectedListIds.clear();
-  //               _selectionMode = false;
-  //             });
-  //           }
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
   void toggleSelection(String id) {
     setState(() {
       if (_selectedListIds.contains(id)) {
