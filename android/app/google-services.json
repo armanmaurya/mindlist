@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "969244227772-riv9u6v0mbjd6blmeisfhmnqtpp2nq5g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.armanmaurya.mindlist",
+            "certificate_hash": "56219b2952067bfd133d34dfc4e6996a8dd5776f"
+          }
+        },
+        {
           "client_id": "969244227772-a0hs211i68968767puteju30lg6jaloh.apps.googleusercontent.com",
           "client_type": 3
         }

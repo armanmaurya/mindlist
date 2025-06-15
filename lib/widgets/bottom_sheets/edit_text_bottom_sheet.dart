@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_native/widgets/buttons/primary_buttom.dart';
 
-class EditTextBottomSheet extends StatefulWidget {
+class EditTextBottomSheet extends StatelessWidget {
   final void Function(String) onSave;
   final String? initialText;
   final String title;
@@ -17,35 +17,17 @@ class EditTextBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<EditTextBottomSheet> createState() => _EditTextBottomSheetState();
-}
-
-class _EditTextBottomSheetState extends State<EditTextBottomSheet> {
-  late final TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController(text: widget.initialText ?? '');
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+    final TextEditingController controller = TextEditingController(text: initialText ?? '');
 
     return Container(
       padding: EdgeInsets.only(
         top: 24,
         left: 24,
         right: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: BoxDecoration(
         color: isDarkMode ? theme.cardColor : Colors.white,
@@ -59,7 +41,7 @@ class _EditTextBottomSheetState extends State<EditTextBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.title,
+                title,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -75,10 +57,9 @@ class _EditTextBottomSheetState extends State<EditTextBottomSheet> {
           TextField(
             controller: controller,
             autofocus: true,
-            maxLength: 28,
             style: theme.textTheme.bodyLarge,
             decoration: InputDecoration(
-              hintText: widget.hintText,
+              hintText: hintText,
               filled: true,
               fillColor: isDarkMode ? Colors.grey[900] : Colors.grey[100],
               border: OutlineInputBorder(
@@ -95,15 +76,16 @@ class _EditTextBottomSheetState extends State<EditTextBottomSheet> {
           SizedBox(
             width: double.infinity,
             child: PrimaryButtom(
-              text: widget.buttonText,
+              text: buttonText,
               onPressed: () {
                 final text = controller.text.trim();
                 if (text.isNotEmpty) {
-                  widget.onSave.call(text);
+                  onSave.call(text);
                 }
               },
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
