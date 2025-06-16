@@ -5,7 +5,9 @@ import 'package:todo_native/services/firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: '969244227772-a0hs211i68968767puteju30lg6jaloh.apps.googleusercontent.com'
+  );
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 

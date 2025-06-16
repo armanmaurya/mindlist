@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:todo_native/screens/home_screen.dart';
 import 'package:todo_native/screens/todo_lists_screen.dart';
 import 'package:todo_native/services/auth_service.dart';
 import 'package:todo_native/widgets/buttons/google_signin_button.dart';
@@ -63,7 +64,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen>
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        CupertinoPageRoute(builder: (context) => const TodoListsScreen()),
+        CupertinoPageRoute(builder: (context) => const HomePageViewScreen()),
       );
     } catch (e) {
       print('Sign in failed: $e');

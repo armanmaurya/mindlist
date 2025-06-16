@@ -31,8 +31,47 @@
 
   <title>todo_native</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+  #loader {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 8px solid #ddd;
+    border-top: 8px solid #2196f3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
+
 </head>
 <body>
+  <!-- 🌟 Custom loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <p>Loading your app...</p>
+  </div>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+  window.addEventListener('flutter-first-frame', function () {
+    document.getElementById('loader')?.remove();
+  });
+</script>
+
 </body>
 </html>

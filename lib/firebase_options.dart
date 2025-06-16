@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -59,10 +50,44 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCLQ-hFEvgyCVKbU0VDCWZQliVpQ1qGs7U',
-    appId: '1:969244227772:ios:58e79b2a130ccdce92f8b9',
+    appId: '1:969244227772:ios:181179a03502ca5d92f8b9',
     messagingSenderId: '969244227772',
     projectId: 'mindlist-c29f6',
     storageBucket: 'mindlist-c29f6.firebasestorage.app',
+    androidClientId: '969244227772-02tfvgu3o88hqcp5p1eeosbvmne5o92h.apps.googleusercontent.com',
+    iosClientId: '969244227772-71db8rk71vdpoev9m02gqcc5dhrf9v40.apps.googleusercontent.com',
     iosBundleId: 'com.armanmaurya.mindlist',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCNSrlFuOJ5GwlTGVbQ-HZusr9xnKXOI-M',
+    appId: '1:969244227772:web:9ff15cbaffb0ccba92f8b9',
+    messagingSenderId: '969244227772',
+    projectId: 'mindlist-c29f6',
+    authDomain: 'mindlist-c29f6.firebaseapp.com',
+    storageBucket: 'mindlist-c29f6.firebasestorage.app',
+    measurementId: 'G-H5B15TZ3PK',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCLQ-hFEvgyCVKbU0VDCWZQliVpQ1qGs7U',
+    appId: '1:969244227772:ios:6982ac506151969b92f8b9',
+    messagingSenderId: '969244227772',
+    projectId: 'mindlist-c29f6',
+    storageBucket: 'mindlist-c29f6.firebasestorage.app',
+    androidClientId: '969244227772-02tfvgu3o88hqcp5p1eeosbvmne5o92h.apps.googleusercontent.com',
+    iosClientId: '969244227772-49plbpv59uj2nt8tu0k8818er8vh9h7k.apps.googleusercontent.com',
+    iosBundleId: 'com.example.todoNative',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCNSrlFuOJ5GwlTGVbQ-HZusr9xnKXOI-M',
+    appId: '1:969244227772:web:f0ee28fa367f0bed92f8b9',
+    messagingSenderId: '969244227772',
+    projectId: 'mindlist-c29f6',
+    authDomain: 'mindlist-c29f6.firebaseapp.com',
+    storageBucket: 'mindlist-c29f6.firebasestorage.app',
+    measurementId: 'G-VPWMMHL4Z3',
+  );
+
 }

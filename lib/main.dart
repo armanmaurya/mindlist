@@ -55,6 +55,10 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       home: user == null ? const GoogleSignInScreen() : const HomePageViewScreen(),
+      routes: {
+        '/todoLists': (context) => const TodoListsScreen(),
+        '/home': (context) => const HomePageViewScreen(),
+      },
     );
   }
 }
