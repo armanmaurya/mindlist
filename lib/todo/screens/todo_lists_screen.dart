@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_native/shared/widgets/forms/edit_text_responsive_form.dart';
 import 'package:todo_native/todo/screens/todo_screen.dart';
 import 'package:todo_native/todo/services/firestore_service.dart';
 import 'package:todo_native/todo/models/todo_list.dart';
@@ -103,43 +104,6 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
     }
   }
 
-  void _showEditSheetOrDialog(BuildContext context, TextEditForm sheet) {
-    final constraints = MediaQuery.of(context).size;
-    if (constraints.width >= 700) {
-      showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel:
-            MaterialLocalizations.of(context).modalBarrierDismissLabel,
-        transitionDuration: const Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: CustomDialog(content: sheet),
-            ),
-          );
-        },
-        transitionBuilder: (context, animation, secondaryAnimation, child) {
-          final curvedValue = Curves.easeOut.transform(animation.value);
-          return Transform.translate(
-            offset: Offset(0, -100 + 100 * (1 - curvedValue)),
-            child: Opacity(opacity: animation.value, child: child),
-          );
-        },
-      );
-    } else {
-      showModalBottomSheet(
-        context: context,
-        useSafeArea: true,
-        isScrollControlled: true,
-        isDismissible: true,
-        builder: (context) => sheet,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -209,7 +173,7 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
                         final selectedList = provider.todoLists.firstWhere(
                           (list) => list.id == _selectedListIds.first,
                         );
-                        _showEditSheetOrDialog(
+                        showEditSheetOrDialog(
                           context,
                           TextEditForm(
                             initialText: selectedList.title,
@@ -275,7 +239,7 @@ class _TodoListsScreenState extends State<TodoListsScreen> {
                 ? FloatingActionButton(
                   key: const ValueKey('fab'),
                   onPressed: () {
-                    _showEditSheetOrDialog(
+                    showEditSheetOrDialog(
                       context,
                       TextEditForm(
                         onSave: (title) {

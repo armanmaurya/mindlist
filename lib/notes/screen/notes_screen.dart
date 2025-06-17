@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_native/notes/models/note.dart';
+import 'package:todo_native/shared/widgets/forms/edit_text_responsive_form.dart';
 import 'package:todo_native/shared/widgets/forms/text_edit_form.dart';
 import 'package:todo_native/notes/widgets/cards/notes_card.dart';
 import 'package:todo_native/notes/services/notes_service.dart';
@@ -23,9 +24,7 @@ class _NotesScreenState extends State<NotesScreen> {
   Future<void> _fetchNotes() async {
     try {
       // Fetch notes snapshot from the service
-      NotesService().getNotesSnapshot().listen((
-        snapshot,
-      ) {
+      NotesService().getNotesSnapshot().listen((snapshot) {
         // Map the snapshot to a list of Note objects
         final notes =
             snapshot.docs.map((doc) {
@@ -83,17 +82,14 @@ class _NotesScreenState extends State<NotesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return TextEditForm(
-                onSave: _handleSaveNote,
-                title: 'Add Note',
-                buttonText: 'Save',
-                hintText: 'Enter your note here...',
-              );
-            },
+          showEditSheetOrDialog(
+            context,
+            TextEditForm(
+              onSave: _handleSaveNote,
+              title: 'Add Note',
+              buttonText: 'Save',
+              hintText: 'Enter your note here...',
+            ),
           );
           // Navigator.pushNamed(context, '/quill-editor');
         },

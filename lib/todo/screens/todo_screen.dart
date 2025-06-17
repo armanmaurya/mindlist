@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_native/shared/widgets/forms/edit_text_responsive_form.dart';
 import 'package:todo_native/todo/models/todo.dart';
 import 'package:todo_native/todo/models/todo_list.dart';
 import 'package:todo_native/todo/providers/todo_list_provider.dart';
@@ -34,13 +35,14 @@ class _TodosScreenState extends State<TodosScreen> {
       _isLoading = true;
     });
     _todosStreamSub?.cancel();
-    _todosStreamSub = FirestoreService()
-        .todosStream(selectedList.id)
-        .listen((snapshot) {
-      final todoList = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return Todo.fromJson(data..['id'] = doc.id);
-      }).toList();
+    _todosStreamSub = FirestoreService().todosStream(selectedList.id).listen((
+      snapshot,
+    ) {
+      final todoList =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            return Todo.fromJson(data..['id'] = doc.id);
+          }).toList();
       setState(() {
         _todos = todoList;
         _isLoading = false;
@@ -85,18 +87,19 @@ class _TodosScreenState extends State<TodosScreen> {
       return ListView(
         padding: EdgeInsets.zero,
         children: [
-          if (undoneTodos.isNotEmpty)
-            TodoListView(todos: undoneTodos),
+          if (undoneTodos.isNotEmpty) TodoListView(todos: undoneTodos),
           if (doneTodos.isNotEmpty) ...[
             Padding(
               padding: const EdgeInsets.symmetric(
-                  vertical: 8.0, horizontal: 16.0),
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
               child: Text(
                 'Completed',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             TodoListView(todos: doneTodos),
@@ -109,10 +112,10 @@ class _TodosScreenState extends State<TodosScreen> {
       appBar: AppBar(title: Text(selectedList?.title ?? 'Todos')),
       body: buildBody(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await showModalBottomSheet(
-            context: context,
-            builder: (context) => TextEditForm(
+        onPressed: () {
+          showEditSheetOrDialog(
+            context,
+            TextEditForm(
               onSave: (title) async {
                 if (title.trim().isNotEmpty && selectedList != null) {
                   FirestoreService().createTodo(
@@ -126,8 +129,6 @@ class _TodosScreenState extends State<TodosScreen> {
               buttonText: 'Create',
               hintText: 'Enter todo title',
             ),
-            useSafeArea: true,
-            isScrollControlled: true,
           );
         },
         child: const Icon(Icons.add),
