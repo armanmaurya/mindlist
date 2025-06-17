@@ -11,6 +11,7 @@
         <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" />
     </a>
     <img src="https://img.shields.io/badge/Platform-Android-blue" alt="Platform" />
+    <img src="https://img.shields.io/badge/Platform-Web-orange" alt="Platform: Web" />
 </p>
 
 </p>
@@ -36,6 +37,7 @@ Mindlist is a modern, cross-platform todo list manager built with Flutter and Fi
 - Real-time sync with Firebase
 - Dark mode and system theme support
 - Responsive design for mobile and web
+- Web support: run in any modern browser with full feature parity
 
 ## 🛠️ Installation Steps
 1. **Clone the repository:**
@@ -52,7 +54,8 @@ Mindlist is a modern, cross-platform todo list manager built with Flutter and Fi
    - Update `firebase_options.dart` if needed.
 4. **Run the app:**
    ```sh
-   flutter run
+   flutter run # for mobile/desktop
+   flutter run -d chrome # for web
    ```
 
 ## 🤝 Contribution Guidelines (Optional)
