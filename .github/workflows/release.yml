@@ -86,11 +86,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
           keep_files: false  # Clean previous files
-
-      - name: Upload Web artifacts to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/web/**/*  # Upload all web files
-          tag_name: ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
