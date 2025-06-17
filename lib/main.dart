@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo_native/screens/home_screen.dart';
-import 'package:todo_native/screens/todo_lists_screen.dart';
+import 'package:todo_native/home/screens/home_screen.dart';
+import 'package:todo_native/todo/screens/todo_lists_screen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:todo_native/screens/google_signin_screen.dart';
+import 'package:todo_native/signin/screens/google_signin_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_native/providers/todo_list_provider.dart';
-import 'package:todo_native/providers/todo_provider.dart';
+import 'package:todo_native/todo/providers/todo_list_provider.dart';
+import 'package:todo_native/todo/providers/todo_provider.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
